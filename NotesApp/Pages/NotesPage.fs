@@ -1,0 +1,60 @@
+﻿module NotesPage
+open System
+open Fabulous.Core
+open Fabulous.DynamicViews
+open Xamarin.Forms
+
+type Note = 
+    { Id: Guid
+      Title: string
+      Content: string }
+
+type Model = { Notes: Note list }
+
+type Msg =
+    | AddNote
+    | DeleteNote of Guid
+    | NoteSelected of Guid
+
+let init () = { Notes = [] }, Cmd.none
+
+let update msg model =
+    match msg with
+    | AddNote -> model, Cmd.none //TODO: open edit page with new note
+    | DeleteNote noteId -> 
+        let notes = model.Notes |> List.filter (fun note -> note.Id <> noteId)
+        { model with Notes = notes }, Cmd.none
+    | NoteSelected noteId -> model, Cmd.none //TODO: open edit page with selected note
+
+let view model dispatch =
+    View.ContentPage(
+        title = "Notes",
+        toolbarItems = [
+            View.ToolbarItem(
+                text = "Add note",
+                command = (fun () -> dispatch AddNote)
+            )
+        ],
+        content = View.ListView(
+            horizontalOptions = LayoutOptions.FillAndExpand,
+            verticalOptions = LayoutOptions.FillAndExpand,
+            items = [
+                for note in model.Notes do
+                    yield View.StackLayout(
+                        horizontalOptions = LayoutOptions.FillAndExpand,
+                        orientation = StackOrientation.Horizontal,
+                        children = [
+                            View.StackLayout(
+                                horizontalOptions = LayoutOptions.FillAndExpand,
+                                orientation = StackOrientation.Vertical,
+                                children = [
+                                    View.Label(text = note.Title, fontAttributes = FontAttributes.Bold)
+                                    View.Label(text = note.Content)
+                                ]
+                            )
+                            View.Button(text = "-", command = (fun _ -> dispatch (DeleteNote note.Id)))
+                        ]
+                    )
+            ]
+        )
+    )
