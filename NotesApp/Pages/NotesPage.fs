@@ -3,11 +3,7 @@ open System
 open Fabulous.Core
 open Fabulous.DynamicViews
 open Xamarin.Forms
-
-type Note = 
-    { Id: Guid
-      Title: string
-      Content: string }
+open Models
 
 type Model = { Notes: Note list }
 
@@ -20,11 +16,11 @@ let init () = { Notes = [] }, Cmd.none
 
 let update msg model =
     match msg with
-    | AddNote -> model, Cmd.none //TODO: open edit page with new note
+    | AddNote -> model, Cmd.none
     | DeleteNote noteId -> 
         let notes = model.Notes |> List.filter (fun note -> note.Id <> noteId)
         { model with Notes = notes }, Cmd.none
-    | NoteSelected noteId -> model, Cmd.none //TODO: open edit page with selected note
+    | NoteSelected noteId -> model, Cmd.none
 
 let view model dispatch =
     View.ContentPage(
