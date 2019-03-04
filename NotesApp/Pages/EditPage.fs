@@ -34,7 +34,7 @@ let view model dispatch =
         content = View.StackLayout(
             verticalOptions = LayoutOptions.FillAndExpand,
             children = [
-                View.Entry(text = model.Title, placeholder = "Title", textChanged = (fun args -> dispatch (TextChanged(Title, args.NewTextValue))))
+                View.Entry(text = model.Title, placeholder = "Title", textChanged = debounce 250 (fun args ->  dispatch (TextChanged(Title, args.NewTextValue))))
                 View.Label(text = "Content:")
                 View.Editor(text = model.Content, textChanged = (fun args -> dispatch (TextChanged(Content, args.NewTextValue))),
                             verticalOptions = LayoutOptions.FillAndExpand)
