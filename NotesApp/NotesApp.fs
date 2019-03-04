@@ -50,7 +50,9 @@ module App =
         | EditMsg msg ->
             let nextModel, nextCmd = EditPage.update msg model.EditModel
             let m = match msg with
-                    | Save -> { model with NotesModel = { Notes = nextModel::model.NotesModel.Notes }; EditModel = initModel(); PageStack = model.PageStack.Tail }
+                    | Save ->
+                        let notes = model.NotesModel.Notes |> List.filter (fun note -> note.Id <> nextModel.Id)
+                        { model with NotesModel = { Notes = nextModel::notes }; EditModel = initModel(); PageStack = model.PageStack.Tail }
                     | _ -> { model with EditModel = nextModel }
             m, Cmd.map NotesMsg nextCmd
         | PagePopped -> 

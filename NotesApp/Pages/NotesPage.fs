@@ -49,6 +49,9 @@ let view model dispatch =
                                 ]
                             )
                             View.Button(text = "-", command = (fun _ -> dispatch (DeleteNote note.Id)))
+                        ],
+                        gestureRecognizers = [
+                            View.TapGestureRecognizer(command = (fun _ -> dispatch (NoteSelected note.Id)))
                         ]
                     )
             ]
